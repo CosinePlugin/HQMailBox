@@ -9,7 +9,7 @@ import java.io.File;
 
 public class SettingConfig {
 
-    private static final String path = "config.yml" ;
+    private static final String path = "config.yml";
 
     private final File file;
     private final YamlConfiguration config;
@@ -41,5 +41,8 @@ public class SettingConfig {
 
         var settingSection = config.getConfigurationSection("setting");
         var maxTime = settingSection.getInt("max-time");
+
+        settingRegistry.setDatabaseSetting(databaseSetting);
+        settingRegistry.setMaxTime(maxTime);
     }
 }

@@ -6,7 +6,6 @@ public class HQMailBox extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
     }
 
     @Override

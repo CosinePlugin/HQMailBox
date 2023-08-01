@@ -1,5 +1,7 @@
 name: HQMailBox
 version: 1.0.0
 api-version: 1.19
-main: com.cosine.test.HQMailBox
+main: kr.hqservice.mailbox.HQMailBox
 authors: [ Cosine_A ]
+libraries:
+  - "com.github.luben:zstd-jni:1.5.5-5"
