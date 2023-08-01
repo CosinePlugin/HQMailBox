@@ -1,0 +1,14 @@
+# 데이터베이스
+db:
+  host: localhost
+  port: 3306
+  database: minecraft
+  user: root
+  password: password
+  max-pool-size: 100
+  min-pool-size: 10
+
+# 설정
+setting:
+  # 아이템이 유지되는 최대 시간 (시간 단위)
+  max-time: 24
