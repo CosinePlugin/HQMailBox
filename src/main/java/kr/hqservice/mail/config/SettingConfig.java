@@ -1,7 +1,7 @@
-package kr.hqservice.mailbox.config;
+package kr.hqservice.mail.config;
 
-import kr.hqservice.mailbox.data.DatabaseSetting;
-import kr.hqservice.mailbox.registry.SettingRegistry;
+import kr.hqservice.mail.data.DatabaseSetting;
+import kr.hqservice.mail.registry.SettingRegistry;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -27,8 +27,9 @@ public class SettingConfig {
     }
 
     public void load() {
-        var databaseSection = config.getConfigurationSection("db");
+        var prefix = config.getString("prefix");
 
+        var databaseSection = config.getConfigurationSection("db");
         var host = databaseSection.getString("host");
         var port = databaseSection.getInt("port");
         var database = databaseSection.getString("database");
@@ -38,10 +39,10 @@ public class SettingConfig {
         var minPoolSize = databaseSection.getInt("min-pool-size");
 
         var databaseSetting = new DatabaseSetting(host, port, database, user, password, maxPoolSize, minPoolSize);
-
         var settingSection = config.getConfigurationSection("setting");
         var maxTime = settingSection.getInt("max-time");
 
+        SettingRegistry.prefix = prefix;
         settingRegistry.setDatabaseSetting(databaseSetting);
         settingRegistry.setMaxTime(maxTime);
     }

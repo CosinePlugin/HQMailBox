@@ -1,3 +1,6 @@
+# 접두사
+prefix: "&6[ 메일함 ]&f"
+
 # 데이터베이스
 db:
   host: localhost

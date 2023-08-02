@@ -1,8 +1,8 @@
-package kr.hqservice.mailbox.database;
+package kr.hqservice.mail.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import kr.hqservice.mailbox.data.DatabaseSetting;
+import kr.hqservice.mail.data.DatabaseSetting;
 
 import java.sql.Connection;
 import java.sql.SQLException;

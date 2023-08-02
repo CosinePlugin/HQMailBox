@@ -1,4 +1,4 @@
-package kr.hqservice.mailbox.data;
+package kr.hqservice.mail.data;
 
 import lombok.Getter;
 import lombok.AllArgsConstructor;

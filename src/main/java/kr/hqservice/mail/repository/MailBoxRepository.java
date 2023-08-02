@@ -1,7 +1,7 @@
-package kr.hqservice.mailbox.repository;
+package kr.hqservice.mail.repository;
 
-import kr.hqservice.mailbox.data.MailBoxDTO;
-import kr.hqservice.mailbox.database.DataSource;
+import kr.hqservice.mail.data.MailBoxDTO;
+import kr.hqservice.mail.database.DataSource;
 import lombok.SneakyThrows;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
@@ -40,23 +41,25 @@ public class MailBoxRepository {
         }
     }
 
-    public MailBoxDTO getMailBox(UUID uuid) {
-        var getMailBoxQuery = "SELECT * FROM " + mailBoxTableName + " WHERE owner = '" + uuid.toString() + "'";
-        try (var connection = dataSource.getConnection();
-             var prepareStatement = connection.prepareStatement(getMailBoxQuery);
-             var resultSet = prepareStatement.executeQuery()
-        ) {
-            if (resultSet.next()) {
-                var ownerText = resultSet.getString("owner");
-                var owner = UUID.fromString(ownerText);
-                var byteArray = resultSet.getBytes("contents");
-                var contents = toDecompressed(byteArray);
-                return new MailBoxDTO(owner, contents);
+    public CompletableFuture<MailBoxDTO> getMailBox(UUID uuid) {
+        return CompletableFuture.supplyAsync(() -> {
+            var getMailBoxQuery = "SELECT * FROM " + mailBoxTableName + " WHERE owner = '" + uuid.toString() + "'";
+            try (var connection = dataSource.getConnection();
+                 var prepareStatement = connection.prepareStatement(getMailBoxQuery);
+                 var resultSet = prepareStatement.executeQuery()
+            ) {
+                if (resultSet.next()) {
+                    var ownerText = resultSet.getString("owner");
+                    var owner = UUID.fromString(ownerText);
+                    var byteArray = resultSet.getBytes("contents");
+                    var contents = toDecompressed(byteArray);
+                    return new MailBoxDTO(owner, contents);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+            return null;
+        });
     }
 
     public void setMailBox(MailBoxDTO mailBoxDTO) {
