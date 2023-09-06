@@ -16,10 +16,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 public class MailBoxRepository {
+
+    private ExecutorService executorService = Executors.newFixedThreadPool(100);
 
     private static final String mailBoxTableName = "mail_box";
 
@@ -43,11 +47,12 @@ public class MailBoxRepository {
 
     public CompletableFuture<MailBoxDTO> getMailBox(UUID uuid) {
         return CompletableFuture.supplyAsync(() -> {
-            var getMailBoxQuery = "SELECT * FROM " + mailBoxTableName + " WHERE owner = '" + uuid.toString() + "'";
+            var getMailBoxQuery = "SELECT * FROM " + mailBoxTableName + " WHERE owner = ?";
             try (var connection = dataSource.getConnection();
-                 var prepareStatement = connection.prepareStatement(getMailBoxQuery);
-                 var resultSet = prepareStatement.executeQuery()
+                 var prepareStatement = connection.prepareStatement(getMailBoxQuery)
             ) {
+                prepareStatement.setString(1, uuid.toString());
+                var resultSet = prepareStatement.executeQuery();
                 if (resultSet.next()) {
                     var ownerText = resultSet.getString("owner");
                     var owner = UUID.fromString(ownerText);
@@ -59,7 +64,7 @@ public class MailBoxRepository {
                 e.printStackTrace();
             }
             return null;
-        });
+        }, executorService);
     }
 
     public void setMailBox(MailBoxDTO mailBoxDTO) {

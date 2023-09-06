@@ -42,7 +42,6 @@ public class MailBoxInventory extends MailBoxInventoryHolder {
 
         // 아이템
         if (slot <= 44) {
-
             return;
         }
         switch (slot) {
